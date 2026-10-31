@@ -1,51 +1,30 @@
-
 from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# ==========================================
-# SECURITY
-# ==========================================
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-change-this-in-production"
 )
 
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = [".vercel.app"]
-
-
-
-# ==========================================
-# APPLICATIONS
-# ==========================================
+ALLOWED_HOSTS = ['.vercel.app']
 
 INSTALLED_APPS = [
-    "cloudinary_storage",
-    "cloudinary",
-
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "academy",
     "home",
 ]
 
-# ==========================================
-# MIDDLEWARE
-# ==========================================
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -53,10 +32,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-# ==========================================
-# URL CONFIGURATION
-# ==========================================
 
 ROOT_URLCONF = "config.urls"
 
@@ -79,28 +54,26 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-# ==========================================
-# DATABASE - NEON POSTGRESQL
-# ==========================================
+DB_ENGINE = os.environ.get("DB_ENGINE", "sqlite")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "neondb"),
-        "USER": os.environ.get("DB_USER", "neondb_owner"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
-        "HOST": os.environ.get("DB_HOST", ""),
-        "PORT": os.environ.get("DB_PORT", "5432"),
-        "OPTIONS": {
-            "sslmode": "require",
-        },
-        "CONN_MAX_AGE": 0,
+if DB_ENGINE == "postgresql":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("POSTGRES_DB", "learning_platform"),
+            "USER": os.environ.get("POSTGRES_USER", "postgres"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+            "HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
+            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+        }
     }
-}
-
-# ==========================================
-# CUSTOM USER MODEL
-# ==========================================
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 AUTH_USER_MODEL = "academy.User"
 
@@ -108,124 +81,47 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# ==========================================
-# PASSWORD VALIDATION
-# ==========================================
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-        "OPTIONS": {"min_length": 8},
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 8}},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
-
-# ==========================================
-# LANGUAGE AND TIME
-# ==========================================
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Lagos"
-
 USE_I18N = True
 USE_TZ = True
 
-# ==========================================
-# STATIC FILES
-# ==========================================
-
-STATIC_URL = "/static/"
-
+STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-# ==========================================
-# CLOUDINARY MEDIA STORAGE
-# ==========================================
-
-}
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('vynja8hy'),
-    'API_KEY': os.environ.get('149546655831186'),
-    'API_SECRET': os.environ.get('FQo-43-_g8G92mN-ZKi-K94OsTY'),
-}
-
-# ==========================================
-# DJANGO FILE STORAGE
-# ==========================================
-
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-MEDIA_URL = "/media/"
-
-# Do not define MEDIA_ROOT for Cloudinary storage.
-# Uploaded files are stored remotely on Cloudinary.
-
-# ==========================================
-# DEFAULT PRIMARY KEY
-# ==========================================
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# ==========================================
-# AUTHENTICATION REDIRECTS
-# ==========================================
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
 
-# ==========================================
-# EMAIL CONFIGURATION
-# ==========================================
-
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
     "django.core.mail.backends.console.EmailBackend",
 )
-
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "noreply@example.com",
 )
 
-# ==========================================
-# PRODUCTION SECURITY
-# ==========================================
-
+# Production hardening. These are enabled only when DEBUG=False.
 if not DEBUG:
-
     SECURE_SSL_REDIRECT = True
-
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
     SECURE_CONTENT_TYPE_NOSNIFF = True
-
     X_FRAME_OPTIONS = "DENY"
-
     SECURE_REFERRER_POLICY = "same-origin"
