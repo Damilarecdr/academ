@@ -56,24 +56,21 @@ ASGI_APPLICATION = "config.asgi.application"
 
 DB_ENGINE = os.environ.get("DB_ENGINE", "sqlite")
 
-if DB_ENGINE == "postgresql":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_DB", "learning_platform"),
-            "USER": os.environ.get("POSTGRES_USER", "postgres"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
-            "HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
-            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "neondb",
+        "USER": "neondb_owner",
+        "PASSWORD": "npg_ZEBx16OfRAvM",
+        "HOST": "ep-empty-sea-b8pmsovl-pooler.c-14.us-east-1.aws.neon.tech",
+        "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+            "channel_binding": "require",
+        },
+        "CONN_MAX_AGE": 0,
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 AUTH_USER_MODEL = "academy.User"
 
