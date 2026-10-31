@@ -8,9 +8,9 @@ SECRET_KEY = os.environ.get(
     "django-insecure-change-this-in-production"
 )
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+DEBUG = False
 
-ALLOWED_HOSTS = [  ]
+ALLOWED_HOSTS = [ 'vercel.app' ]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
