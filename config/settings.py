@@ -22,8 +22,7 @@ INSTALLED_APPS = [
     "academy",
     "home",
 
-    'cloudinary_storage',
-    'cloudinary',
+
 ]
 
 MIDDLEWARE = [
@@ -144,17 +143,4 @@ if not DEBUG:
     SECURE_REFERRER_POLICY = "same-origin"
 
 
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('vynja8hy'),
-    'API_KEY': os.environ.get('149546655831186'),
-    'API_SECRET': os.environ.get('FQo-43-_g8G92mN-ZKi-K94OsTY'),
-}
