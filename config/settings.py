@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = [ '.vercel.app' ]
+ALLOWED_HOSTS = ['academ-wheat.vercel.app' ]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
