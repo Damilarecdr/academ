@@ -101,8 +101,4 @@ whitenoise
 xhtml2pdf==0.2.17
 yt-dlp==2025.9.5
 zopfli==0.2.3.post1
-cloudinary
-django-cloudinary-storage
-psycopg2-binary==2.9.10
-whitenoise
-gunicorn
+
